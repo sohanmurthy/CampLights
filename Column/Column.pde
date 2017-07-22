@@ -30,10 +30,9 @@ void setup() {
   // Set the patterns
   lx.setPatterns(new LXPattern[] {
     
-    new BistroLights(lx),
-    new Runway(lx),
     
-    //new IteratorTestPattern(lx),
+    new ColorWaves(lx),
+    new Noise(lx),
     
   });
   
@@ -61,6 +60,7 @@ void setup() {
     .addComponent(pointCloud = new UIPointCloud(lx, model).setPointSize(4))
   );
   
+  println("Model Height: " + model.yRange / 12 + " feet");
 
 }
 

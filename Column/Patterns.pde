@@ -1,105 +1,90 @@
-class Runway extends LXPattern {
+class Noise extends LXPattern {
   
-//private final float tight = 5;
-//private final float speed = 4800;
-
-private final SinLFO tight = new SinLFO(4,8, 13000);
-private final SinLFO speed = new SinLFO(4800, 7800, 10000);
-private final SawLFO move = new SawLFO(TWO_PI, 0, speed);
-
- 
-  Runway(LX lx) {
+  private float accum = 0; 
+  final float spd = 0.4;
+  final float scale = 0.285;
+  
+  //private final int sync = 18000;
+  private final SinLFO sync = new SinLFO(18*SECONDS, 29*SECONDS, 47*SECONDS);
+  private final SinLFO range = new SinLFO(100,200, sync.getValuef());
+  private final SinLFO hueCenter = new SinLFO(model.xMax/3, model.xMax*.667, sync.getValuef()*1.61);
+  
+  
+  Noise(LX lx) {
     super(lx);
-    addModulator(tight).start();
-    addModulator(speed).start();
-    addModulator(move).start();
-
+    addModulator(hueCenter.randomBasis()).start();
+    addModulator(sync.randomBasis()).start();
+    addModulator(range.randomBasis()).start();
   }
   
   public void run(double deltaMs) {
+    accum += deltaMs/1000. * spd;
+    float sv = scale;
+    float sat = scale/2;
     for (LXPoint p : model.points) {
-   
-      //bars
-      float dz = (abs(p.z - model.zMin)) / model.zRange;
-      
-      
-      //float dx = (dist(p.x, p.z, model.cx, model.cz)) / model.zRange;
-     
-      //"+" or "-" before move function changes direction
-      float b = 50 + 50 * sin(dz * tight.getValuef() + move.getValuef());
-      
-      
       colors[p.index] = LXColor.hsb(
-      (lx.getBaseHuef() + (p.z / model.zRange) * 90) % 360,      
-      100,
-      b);
-
+      //(lx.getBaseHuef() + (p.y / model.yRange) * 90) % 360,
+      (lx.getBaseHuef() + (abs(p.y - model.yMax) / model.yRange) * 120 - (abs(p.x - hueCenter.getValuef()) / model.xRange) * 120) % 360,
+      constrain(50 + range.getValuef()*(-1 + 2*noise(sat*p.x, sat*p.y, accum)), 0, 100),
+      constrain(50 + range.getValuef()*(-1 + 2*noise(sv*p.x, sv*p.y, accum)), 0, 100)
+      );
     }
-    lx.cycleBaseHue(3*MINUTES);
+    lx.cycleBaseHue(5*MINUTES);
   }
 }
 
 
-class BistroLights extends LXPattern {
-  class BistroLight extends LXLayer {
-    
-    
-    //wave vertical o
-    final private SinLFO rate1 = new SinLFO(210000*2, 330000*2, 17000);
-    final private SinLFO off1 = new SinLFO(-4*TWO_PI, 4*TWO_PI, rate1);
-    final private SinLFO wth1 = new SinLFO(7*2, 12*2, 17000);
+class ColorWaves extends LXPattern {
+ 
+  class ColorWave extends LXLayer {
 
-    final private SinLFO rate2 = new SinLFO(180000*2, 360000*2, 17000);
-    final private SinLFO off2 = new SinLFO(-4*TWO_PI, 4*TWO_PI, rate2);
-    final private SinLFO wth2 = new SinLFO(8*2, 25*2, 21000);
+  private final SinLFO hr = new SinLFO(45, 120, 34000);
 
-    final private SinLFO rate3 = new SinLFO(160000, 300000, 15000);
-    final private SinLFO off3 = new SinLFO(-4*TWO_PI, 4*TWO_PI, rate3);
-    final private SinLFO wth3 = new SinLFO(70*2, 140*2, 24000);
-
-    final private float hOffset;
-
-    BistroLight(LX lx, int i) {
-      super(lx);
-      hOffset = i*120;
-      addModulator(rate1.randomBasis()).start();
-      addModulator(rate2.randomBasis()).start();
-      addModulator(rate3.randomBasis()).start();
-      addModulator(off1.randomBasis()).start();
-      addModulator(off2.randomBasis()).start();
-      addModulator(off3.randomBasis()).start();
-      addModulator(wth1.randomBasis()).start();
-      addModulator(wth2.randomBasis()).start();
-      addModulator(wth3.randomBasis()).start();
-    }
-
-    public void run(double deltaMs) {
-      for (LXPoint p : model.points) {
-        
-        float vy1 = model.yRange/3 * sin(off1.getValuef() + (p.x - model.cx) / wth1.getValuef());
-        float vy2 = model.yRange/3 * sin(off2.getValuef() + (p.x - model.cx) / wth2.getValuef());
-        float vy = model.ay + vy1 + vy2;
-        
-        float thickness = 5 + ( 3 * sin(off3.getValuef() + (p.z - model.cz) / wth3.getValuef()));
-        
-        addColor(p.index, LXColor.hsb(
-        
-          (lx.getBaseHuef() + hOffset + dist(p.x, p.z, model.ax, model.az) /model.zRange * 360) % 360, 
-          100, 
-          max(0, 100 - (100/thickness)*abs(p.y - vy))
-          ));
-      }
-    }
-  }
-
-  BistroLights(LX lx) {
+  private final SinLFO speed = new SinLFO(7500, 9000, 27000);
+  private final SawLFO move = new SawLFO(TWO_PI, 0, speed);
+  private final SinLFO tight = new SinLFO(1, 2, 22000*3);
+  
+  private int xPos;
+  private int hOffset;
+  private float slope;
+  private int brightness;
+  
+  ColorWave(LX lx, float s, int x, int o, int b) {
     super(lx);
-    for (int i = 0; i < 2; ++i) {
-      addLayer(new BistroLight(lx, i));
-    }
+    brightness = b;
+    slope = s;
+    xPos = x;
+    hOffset = o;
+    addModulator(hr).start();
+    addModulator(speed).start();
+    addModulator(move).start();
+    addModulator(tight).start();
   }
 
   public void run(double deltaMs) {
+    for (LXPoint p : model.points) {
+      
+      float dx = (abs(p.x - (model.cx + xPos*FEET)) - slope * abs(p.y - (model.cy + 16*FEET))) / model.yRange;
+      float b = brightness+brightness*sin(dx * tight.getValuef() + move.getValuef());
+
+      blendColor(p.index, LXColor.hsb(
+        (lx.getBaseHuef() + hOffset + abs(p.y - model.cy) / model.yRange * hr.getValuef() + abs(p.x - model.xMin) / model.xRange * hr.getValuef()) % 360, 
+        45, 
+        b
+        ), LXColor.Blend.LIGHTEST);
+    }
+  }
+}
+
+
+ColorWaves(LX lx) {
+  super(lx);
+    addLayer(new ColorWave(lx, 4 , 5, 0, 50));
+    addLayer(new ColorWave(lx, 3, -10, 120, 50));
+}
+ 
+  public void run(double deltaMs) {
     setColors(#000000);
   }
+  
 }
