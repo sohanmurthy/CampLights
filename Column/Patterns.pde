@@ -4,7 +4,6 @@ class Noise extends LXPattern {
   final float spd = 0.4;
   final float scale = 0.285;
   
-  //private final int sync = 18000;
   private final SinLFO sync = new SinLFO(18*SECONDS, 29*SECONDS, 47*SECONDS);
   private final SinLFO range = new SinLFO(100,200, sync.getValuef());
   private final SinLFO hueCenter = new SinLFO(model.xMax/3, model.xMax*.667, sync.getValuef()*1.61);
@@ -85,6 +84,59 @@ ColorWaves(LX lx) {
  
   public void run(double deltaMs) {
     setColors(#000000);
+    lx.cycleBaseHue(5*MINUTES);
+  }
+  
+}
+
+
+class BistroLights extends LXPattern{
+  
+  class BistroLight extends LXLayer {
+    
+    private final SinLFO sync = new SinLFO(6*SECONDS, 18*SECONDS, 38*SECONDS);
+    private final SinLFO bright = new SinLFO(0,100, sync);
+    private final SinLFO sat = new SinLFO(35,100, sync);
+    
+    private int sPixel;
+    private int fPixel;
+    private float hOffset;
+      
+    BistroLight(LX lx, int s, int f, float o){
+      super(lx);
+      sPixel = s;
+      fPixel = f;
+      hOffset = o;
+      addModulator(sync.randomBasis()).start();
+      addModulator(bright.randomBasis()).start();
+      addModulator(sat.randomBasis()).start();
+    }
+    
+    public void run(double deltaMs) {
+      float s = sat.getValuef();
+      float b = bright.getValuef();
+      
+      for(int i = sPixel; i < fPixel; i++){
+        blendColor(i, LXColor.hsb(
+          lx.getBaseHuef() + hOffset,
+          s,
+          b
+          ), LXColor.Blend.LIGHTEST);
+        }
+    }    
+    
+  }
+  
+  BistroLights(LX lx){
+   super(lx);
+   for(int s = 0; s <= 95; s+=5){
+     addLayer(new BistroLight(lx, s, s+5, s*0.805));
+   }
+  }
+  
+  public void run(double deltaMs) {
+    setColors(#000000);
+    lx.cycleBaseHue(3*MINUTES);
   }
   
 }

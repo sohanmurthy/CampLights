@@ -17,7 +17,6 @@ LXOutput output;
 UI3dComponent pointCloud;
 
 
-
 void setup() {
   
   // Create the model, which describes where the light points are
@@ -30,7 +29,7 @@ void setup() {
   // Set the patterns
   lx.setPatterns(new LXPattern[] {
     
-    
+    new BistroLights(lx),
     new ColorWaves(lx),
     new Noise(lx),
     
@@ -60,7 +59,12 @@ void setup() {
     .addComponent(pointCloud = new UIPointCloud(lx, model).setPointSize(4))
   );
   
+  println("Why haven't you memorized the model dimensions yet?");
+  println("Ugh. Well, here they are again:");
+  println("------------------------------");
   println("Model Height: " + model.yRange / 12 + " feet");
+  println("Model Size: "+ model.size + " pixels");
+  
 
 }
 
