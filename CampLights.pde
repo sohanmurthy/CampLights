@@ -17,7 +17,6 @@ LXOutput output;
 UI3dComponent pointCloud;
 
 
-
 void setup() {
   
   // Create the model, which describes where the light points are
@@ -30,10 +29,9 @@ void setup() {
   // Set the patterns
   lx.setPatterns(new LXPattern[] {
     
+    new Waves(lx),
     new BistroLights(lx),
-    new Runway(lx),
-    
-    //new IteratorTestPattern(lx),
+    new Noise(lx),
     
   });
   
@@ -51,15 +49,21 @@ void setup() {
   output = buildOutput();
   
   // Adds UI elements -- COMMENT all of this out if running on Linux in a headless environment
-  size(800, 600, P3D);
+  size(375 , 667, P3D);
   lx.ui.addLayer(
     new UI3dContext(lx.ui) 
-    .setCenter(model.cx, model.cy-(1*FEET), model.cz)
-    .setRadius(18*FEET)
+    .setCenter(model.cx, model.cy, model.cz)
+    .setRadius(10*FEET)
     .setTheta(PI/6)
     .setPhi(PI/90)    
     .addComponent(pointCloud = new UIPointCloud(lx, model).setPointSize(4))
   );
+  
+  println("Why haven't you memorized the model dimensions yet?");
+  println("Ugh. Well, here they are again:");
+  println("------------------------------");
+  println("Model Height: " + model.yRange / 12 + " feet");
+  println("Model Size: "+ model.size + " pixels");
   
 
 }

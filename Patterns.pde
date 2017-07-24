@@ -32,61 +32,42 @@ class Noise extends LXPattern {
   }
 }
 
+class Waves extends LXPattern{
 
-class ColorWaves extends LXPattern {
- 
-  class ColorWave extends LXLayer {
-
-  private final SinLFO hr = new SinLFO(45, 120, 34000);
-
-  private final SinLFO speed = new SinLFO(7500, 9000, 27000);
-  private final SawLFO move = new SawLFO(TWO_PI, 0, speed);
-  private final SinLFO tight = new SinLFO(1, 2, 22000*3);
+    private final SinLFO sync = new SinLFO(15*SECONDS, 20*SECONDS, 1.61*MINUTES);
+    
+    private final SinLFO speed = new SinLFO(10000, 12000, sync);    
+    private final SinLFO tight = new SinLFO(7,10, sync);
+    private final SinLFO hr = new SinLFO(30, 180, sync);
+    
+    private final SawLFO move = new SawLFO(TWO_PI, 0, speed);
   
-  private int xPos;
-  private int hOffset;
-  private float slope;
-  private int brightness;
-  
-  ColorWave(LX lx, float s, int x, int o, int b) {
+    Waves(LX lx){
     super(lx);
-    brightness = b;
-    slope = s;
-    xPos = x;
-    hOffset = o;
-    addModulator(hr).start();
-    addModulator(speed).start();
-    addModulator(move).start();
-    addModulator(tight).start();
-  }
-
-  public void run(double deltaMs) {
-    for (LXPoint p : model.points) {
-      
-      float dx = (abs(p.x - (model.cx + xPos*FEET)) - slope * abs(p.y - (model.cy + 16*FEET))) / model.yRange;
-      float b = brightness+brightness*sin(dx * tight.getValuef() + move.getValuef());
-
-      blendColor(p.index, LXColor.hsb(
-        (lx.getBaseHuef() + hOffset + abs(p.y - model.cy) / model.yRange * hr.getValuef() + abs(p.x - model.xMin) / model.xRange * hr.getValuef()) % 360, 
-        45, 
-        b
-        ), LXColor.Blend.LIGHTEST);
+    addModulator(sync.randomBasis()).start();
+    addModulator(speed.randomBasis()).start();
+    addModulator(tight.randomBasis()).start();
+    addModulator(hr.randomBasis()).start();
+    addModulator(move.randomBasis()).start();
     }
-  }
-}
-
-
-ColorWaves(LX lx) {
-  super(lx);
-    addLayer(new ColorWave(lx, 4 , 5, 0, 50));
-    addLayer(new ColorWave(lx, 3, -10, 120, 50));
-}
- 
-  public void run(double deltaMs) {
-    setColors(#000000);
-    lx.cycleBaseHue(5*MINUTES);
-  }
+    
+    
+    public void run(double deltaMs){
+      for (LXPoint p : model.points) {
+        
+        float dx = (abs(p.x - model.xMax) + 0.1 * abs(p.y - model.yMin)) / model.xRange;
+        float b = 50 + 50 * sin(dx * tight.getValuef() + move.getValuef());
+         colors[p.index]= LXColor.hsb(
+         //lx.getBaseHuef() + hOffset,
+         (lx.getBaseHuef() + (dist(p.x, p.y, model.xMax, model.yMin) / model.yRange) * hr.getValuef()) % 360,
+         45,
+         b
+         );
+      }
+    }
   
+  
+
 }
 
 
