@@ -3,6 +3,8 @@ CampLights
 
 Whether you're relaxing in the woods or gettin' dusty on the playa, camping is more fun with funky lights!
 
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">I MADE A GLOWYTHING AND NOW SO CAN YOU <a href="https://t.co/XuoEAgXCQQ">https://t.co/XuoEAgXCQQ</a> <a href="https://t.co/CivjLwG3dW">pic.twitter.com/CivjLwG3dW</a></p>&mdash; Sohan Murthy (@sohanmurthy) <a href="https://twitter.com/sohanmurthy/status/891382680490713088">July 29, 2017</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 
 ### Hardware:
