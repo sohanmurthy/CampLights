@@ -15,6 +15,7 @@ The basic system consists of a Raspberry Pi 3, FadeCandy controller, WS2811 LEDs
 4. A solid battery pack. This is where things can get complicated depending on the scale of your project (more on that below), but for this setup I got a [RAVPower 22000mAh Portable Charger](https://www.amazon.com/RAVPower-Portable-22000mAh-Li-polymer-Smartphone/dp/B01G1XH46M/).
 
 <img src="https://github.com/sohanmurthy/CampLights/blob/master/img/completed_lantern.jpg" width = 50%/>
+
 *One completed lantern*
 
 #### Add-ons!
@@ -24,6 +25,7 @@ The basic system consists of a Raspberry Pi 3, FadeCandy controller, WS2811 LEDs
 7. Paper lanterns! [14" diameter lanterns](https://www.amazon.com/Just-Artifacts-White-Paper-Lanterns/dp/B01CEXC0BW/) neatly fit 5 LEDs each if you purchase the configuration above.
 
 <img src="https://github.com/sohanmurthy/CampLights/blob/master/img/one_strand.jpg" width = 50%/>
+
 *A 5-LED strand with 3-pin weatherproof connectors*
 
 #### Batteries? How do they work?
@@ -37,6 +39,7 @@ However, practically speaking, for an artsy installation like this one, there is
 If your installation is more than 100 LEDs, disregard everything I just said. You really *do* need something hefty that can chuck out a lot of amps.
 
 <img src="https://github.com/sohanmurthy/CampLights/blob/master/img/eletrical_box.jpg" width=50%/>
+
 *All the stuff in a weatherproof box*
 
 
