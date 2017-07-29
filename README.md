@@ -3,9 +3,6 @@ CampLights
 
 Whether you're relaxing in the woods or gettin' dusty on the playa, camping is more fun with funky lights!
 
-<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">I MADE A GLOWYTHING AND NOW SO CAN YOU <a href="https://t.co/XuoEAgXCQQ">https://t.co/XuoEAgXCQQ</a> <a href="https://t.co/CivjLwG3dW">pic.twitter.com/CivjLwG3dW</a></p>&mdash; Sohan Murthy (@sohanmurthy) <a href="https://twitter.com/sohanmurthy/status/891382680490713088">July 29, 2017</a></blockquote>
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
 
 ### Hardware:
 The basic system consists of a Raspberry Pi 3, FadeCandy controller, WS2811 LEDs embedded into 14" paper lanterns, and a battery pack. **Lots of assembly is required.** Before you get started, you'll also need plenty of header pins, solder, shrink tubing, and connector wire.
