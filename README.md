@@ -45,7 +45,7 @@ If your installation is more than 100 LEDs, disregard everything I just said. Yo
 
 ### Software installation:
 
-1. Install [Processing 3](https://processing.org/download/?processing) onto your Raspberry Pi by running `curl https://processing.org/download/install-arm.sh | sudo sh` in the command line.
+1. Install [Processing 3](https://processing.org/download/?processing) onto your Raspberry Pi by running `curl https://processing.org/download/install-arm.sh | sudo sh`
 2. Install [Fadecandy server](https://github.com/scanlime/fadecandy)
 3. Clone this repo into your Processing sketchbook folder.
 
